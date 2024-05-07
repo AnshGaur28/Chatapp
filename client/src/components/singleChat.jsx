@@ -1,5 +1,5 @@
 import {useForm} from "react-hook-form";
-import socket from "../utils/socketClient";
+import {socket} from "../utils/socketClient";
 import { useEffect, useRef, useState } from "react";
 function SingleChat() {
     const [messages , setMessages] =  useState([]);
@@ -25,7 +25,7 @@ function SingleChat() {
     const onSubmit = async(e)=>{
         if(e.message){
           const message = await e.message;
-          socket.send(message);
+          socket.send({"message" : message});
         }
         formRef.current.reset();
     }
