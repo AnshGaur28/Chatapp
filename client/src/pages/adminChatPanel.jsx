@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import io from "socket.io-client";
 
 function AdminChatPanel() {
@@ -7,7 +7,7 @@ function AdminChatPanel() {
   const [messages, setMessages] = useState([]);
   const [messageInput, setMessageInput] = useState("");
   const socketRef = useRef(null);
-
+  const navigate = useNavigate();
   useEffect(() => {
     const socket = io("ws://localhost:3000");
     socketRef.current = socket;
@@ -28,6 +28,10 @@ function AdminChatPanel() {
       setMessageInput("");
     }
   };
+  const handleClose = async ()=>{
+    socketRef.current.emit("closeRoom" , roomId);
+    navigate('/dashboard');
+  }
 
   return (
     <div className="m-2">
@@ -47,6 +51,7 @@ function AdminChatPanel() {
         />
         <button className="border-2 p-2 m-2 bg-blue-500 hover:bg-blue-400 rounded-lg" type="submit">Send</button>
       </form>
+      <button className="border-2 p-2  bg-red-600 hover:bg-red-400 rounded-lg" onClick={()=>{ handleClose}}>End chat</button>
     </div>
   );
 }

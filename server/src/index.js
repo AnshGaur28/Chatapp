@@ -46,7 +46,9 @@ io.on("connection" , (socket)=>{
     socket.on("createRoom", () => {
         try {
             const roomId = `room_${socket.id}`; // Generate a unique room ID, e.g., room_<userId>
+            console.log(roomId)
             socket.join(roomId); // Join the room
+            // io.to(roomId).emit("message", `${socket.id.substring(0,5)} has joined`);
             console.log(`User ${socket.id} joined room ${roomId}`);
         } catch (error) {
             console.error('Error creating room:', error);
@@ -55,9 +57,9 @@ io.on("connection" , (socket)=>{
     socket.on("joinRoom" , (roomId)=>{
 
         try {
-            // console.log(roomId)
+            console.log(roomId)
             socket.join(roomId); // Join the room
-            // console.log(`User ${socket.id} joined room ${roomId}`);
+            io.to(roomId).emit("message", `${socket.id.substring(0,5)} has joined`);
         } catch (error) {
             console.error('Error creating room:', error);
         }
