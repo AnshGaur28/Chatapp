@@ -1,11 +1,17 @@
 import {useForm} from "react-hook-form";
-import {socket} from "../utils/socketClient";
 import { useEffect, useRef, useState } from "react";
+import io  from 'socket.io-client';
+
 function SingleChat() {
     const [messages , setMessages] =  useState([]);
     const formRef = useRef(null);
     const activityRef = useRef(null);
+    const socketRef = useRef(null);
     useEffect(()=>{
+      const socket = io("ws://localhost:3000");
+      socketRef.current = socket ;
+      console.log(socket.id)
+      socket.emit('createRoom' , null );
       socket.on("message" , async (message)=>{
         setMessages(messages => [...messages , message]);
       });
@@ -14,7 +20,6 @@ function SingleChat() {
         console.log('WebSocket connection established.');
       });
       socket.on('activity' , (name)=>{
-        console.log(name);
         activityRef.textContent =  `${name} is typing`
       })
       return () => {
@@ -25,29 +30,30 @@ function SingleChat() {
     const onSubmit = async(e)=>{
         if(e.message){
           const message = await e.message;
-          socket.send({"message" : message});
+          socketRef.current.send({"message" : message});
         }
         formRef.current.reset();
     }
   const {formState: {errors} , register , handleSubmit} = useForm();
   return (
     <>
-      <div>
-      <h1>Chat Page</h1>
-      <div className="messages-container">
+      <div className="m-2 ">
+      <h1 className="font-bold text-xl p-2">Chat Page</h1>
+      <div className="messages-container text-lg">
           {messages.map((message , index)=>{
             return (<div key={index}>{message}</div>)
           })}
       </div>
       <form ref={formRef} onSubmit={handleSubmit(onSubmit)} className="message-form">
         <input
+          className="border-2 border-gray-300 "
           type="text"
           {...register('message', { required: true })}
           placeholder="Type your message..."
-          onKeyDown={()=>{socket.emit('activity' ,  socket.id.substring(0,5))}}
+          onKeyDown={()=>{socketRef.current.emit('activity' ,  socketRef.current.id.substring(0,5))}}
         />
         {errors?.type == "required" && <p>Provide an input</p>}
-        <button type="submit">Send</button>
+        <button type="submit" className="border-2 p-2 m-2 bg-blue-500 hover:bg-blue-400 rounded-lg">Send</button>
       </form>
       <p ref={activityRef} className="activity"></p>
     </div>
