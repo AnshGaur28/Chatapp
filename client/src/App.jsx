@@ -4,6 +4,7 @@ import SingleChat from './pages/singleChat.jsx';
 import LandingPage from './pages/landingPage.jsx';
 import AdminDashboard from './pages/adminDashboard.jsx';
 import AdminChatPanel from './pages/adminChatPanel.jsx';
+import LoginPage from './pages/loginPage.jsx';
 function App() {
   return (
     <Router>
@@ -11,6 +12,7 @@ function App() {
       <div className='app'>
         <Routes>
           <Route path='/' exact Component={LandingPage}/>
+          <Route path='/login' exact Component={LoginPage}/>
           <Route   path='/singleChat' exact  Component={SingleChat}  />
           <Route   path='/dashboard' exact  Component={AdminDashboard}  />
           <Route path='/adminChatPanel/:roomId' exact Component={AdminChatPanel}/>

@@ -6,6 +6,7 @@ export default function AdminDashboard(){
     const navigate = useNavigate();
     const [users , setUsers] = useState([]);
     const handleSubmit = async(SID)=>{
+        console.log(1);
         navigate(`/adminChatPanel/room_${SID}`);
     }
     useEffect(()=>{
@@ -33,7 +34,7 @@ export default function AdminDashboard(){
                 {
                     users.map((user)=>{
                         return (
-                            <button className="p-2 bg-blue-500 hover:bg-blue-400 m-2 rounded-lg" key={user.SID} onClick={() => handleSubmit(user.SID)} ><div>{user.SID}</div></button>
+                            <button className="p-2 bg-blue-500 hover:bg-blue-400 m-2 rounded-lg" key={user.SID} onClick={() => handleSubmit(user.SID)} ><div>{user.username}</div></button>
                         )
                     })
                 }

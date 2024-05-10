@@ -3,34 +3,34 @@ import { useEffect, useRef, useState } from "react";
 import io  from 'socket.io-client';
 
 function SingleChat() {
+  const jwt = sessionStorage.getItem('token')
     const [messages , setMessages] =  useState([]);
     const formRef = useRef(null);
     const activityRef = useRef(null);
     const socketRef = useRef(null);
     useEffect(()=>{
-      const socket = io("ws://localhost:3000");
-      socketRef.current = socket ;
-      console.log(socket.id)
-      socket.emit('createRoom' , null );
-      socket.on("message" , async (message)=>{
-        setMessages(messages => [...messages , message]);
-      });
+      if(!socketRef.current){        
+        const socket = io("ws://localhost:3000");
+        socketRef.current = socket ;
+        socket.emit('createRoom' , sessionStorage.getItem('token'));
+        socket.on("message" , async (message)=>{
+          setMessages(messages => [...messages , message]);
+        });
 
-      socket.on("open" , ()=> {
-        console.log('WebSocket connection established.');
-      });
-      socket.on('activity' , (name)=>{
-        activityRef.textContent =  `${name} is typing`
-      })
-      return () => {
-        socket.off('message');
-      };
+        socket.on("open" , ()=> {
+          console.log('WebSocket connection established.');
+        });
+        socket.on('activity' , (name)=>{
+          activityRef.textContent =  `${name} is typing`
+        })
+
+      }
 
     },[]);
     const onSubmit = async(e)=>{
         if(e.message){
           const message = await e.message;
-          socketRef.current.send({"message" : message});
+          socketRef.current.send({"message" : message , "token" : jwt});
         }
         formRef.current.reset();
     }
@@ -50,7 +50,7 @@ function SingleChat() {
           type="text"
           {...register('message', { required: true })}
           placeholder="Type your message..."
-          onKeyDown={()=>{socketRef.current.emit('activity' ,  socketRef.current.id.substring(0,5))}}
+          
         />
         {errors?.type == "required" && <p>Provide an input</p>}
         <button type="submit" className="border-2 p-2 m-2 bg-blue-500 hover:bg-blue-400 rounded-lg">Send</button>
