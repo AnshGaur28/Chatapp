@@ -19,11 +19,13 @@ const userSchema = new mongoose.Schema({
         type : [String],
         default:  [] ,
     },
-    // chat : {
-    //     type : objectId ,
-    // },
+
     roomID : {
         type : String ,
+    },
+    closed : {
+        type : Boolean ,
+        default : false ,
     }
 
 });

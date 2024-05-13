@@ -6,8 +6,7 @@ const getAllClient = async (req, res) => {
     const clients = await User.find({
       SID: { $exists: true },
       role: "client",
-    }).select("SID username");
-    // console.log(clients);
+    }).select("SID username closed");
     return res.status(200).send({ clients });
   } catch (error) {
     console.log(error.message);
@@ -23,8 +22,6 @@ const getRoomHistory = async (req, res) => {
       { roomID: roomId },
       "messages , username"
     );
-    // console.log("Inside adminController")
-    // console.log(clientData.username, clientData.messages);
     return res.status(200).send({username : clientData.username , historyMessages : clientData.messages});
   } catch (error) {
     console.log(error.message);

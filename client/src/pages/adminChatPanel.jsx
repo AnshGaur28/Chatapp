@@ -26,10 +26,12 @@ function AdminChatPanel() {
           const response = await axios.get("http://localhost:3000/admin/getRoomHistory" , {params: {roomId : roomId}}) ;
           console.log("Admin chat panel" ,response.data.historyMessages , response.data.username);
 
-          for(let i in response.data.historyMessages){
-            const formattedMessage = `${response.data.username} : ${response.data.historyMessages[i]}` ;
-            setMessages(messages => [...messages , formattedMessage]);
-          }
+          // for(let i in response.data.historyMessages){
+          //   const formattedMessage = `${response.data.username} : ${response.data.historyMessages[i]}` ;
+          //   setMessages(messages => [...messages , formattedMessage]);
+          // }
+            setMessages(messages => [...messages , ...response.data.historyMessages]);
+
         }
         getMessageHistory();
       

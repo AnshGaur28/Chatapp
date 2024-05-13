@@ -1,6 +1,7 @@
 import {useForm} from "react-hook-form";
 import { useEffect, useRef, useState } from "react";
 import io  from 'socket.io-client';
+import { useNavigate } from "react-router-dom";
 
 function SingleChat() {
   const jwt = sessionStorage.getItem('token')
@@ -8,6 +9,7 @@ function SingleChat() {
     const formRef = useRef(null);
     const activityRef = useRef(null);
     const socketRef = useRef(null);
+    const navigate = useNavigate();
     useEffect(()=>{
       if(!socketRef.current){        
         const socket = io("ws://localhost:3000");
@@ -22,8 +24,7 @@ function SingleChat() {
         });
         socket.on('activity' , (name)=>{
           activityRef.textContent =  `${name} is typing`
-        })
-
+        });
       }
 
     },[]);
@@ -33,6 +34,11 @@ function SingleChat() {
           socketRef.current.send({"message" : message , "token" : jwt});
         }
         formRef.current.reset();
+    }
+    const handleClose = async ()=>{
+      console.log("Leaving Room");
+      socketRef.current.emit("clientLeaveRoom");
+      navigate('/');
     }
   const {formState: {errors} , register , handleSubmit} = useForm();
   return (
@@ -57,6 +63,7 @@ function SingleChat() {
       </form>
       <p ref={activityRef} className="activity"></p>
     </div>
+    <button className="border-2 p-2  bg-red-600 hover:bg-red-400 rounded-lg" onClick={handleClose}>End chat</button>
     </>
   )
 }
