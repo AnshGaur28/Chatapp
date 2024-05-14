@@ -37,8 +37,11 @@ export default function AdminDashboard() {
             {users.map((user) => (
               <button
                 className={`block w-full px-2 py-2 ${
-                  user.closed === false ? "bg-blue-500" : "bg-gray-300"
-                } hover:bg-blue-400 my-2 rounded-lg`}
+                  user.closed === false
+                    ? "bg-blue-500 hover:bg-blue-400 "
+                    : "bg-gray-300"
+                } my-2 rounded-lg text-white`}
+                disabled={user.closed}
                 key={user.SID}
                 onClick={() => handleSubmit(user.SID)}
               >
