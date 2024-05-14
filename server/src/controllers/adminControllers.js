@@ -1,7 +1,5 @@
-// const redisCache = require('../cache/redisCache.js');
 const User = require("../models/user.model.js");
 const getAllClient = async (req, res) => {
-  // console.log("Inside GetClients Controller")
   try {
     const clients = await User.find({
       SID: { $exists: true },
