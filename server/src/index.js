@@ -81,9 +81,15 @@ io.on("connection", (socket) => {
             console.log("Admin leaving room", roomId)
             io.to(roomId).emit("message", `Admin has left`);
             await User.findOneAndUpdate({ roomID: roomId }, { $set: { closed: false } });
-            // console.log(room);
         } catch (error) {
             console.error('Error leaving room:', error);
+        }
+    })
+    socket.on("transferRoom", async (roomId) => {
+        try {
+            await User.findOneAndUpdate({ roomID: roomId }, { $set: { closed: false } });
+        } catch (error) {
+            console.error('Error Transfering room:', error);
         }
     })
 

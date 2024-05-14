@@ -51,6 +51,11 @@ function AdminChatPanel() {
     socketRef.current.emit("leaveRoom" , roomId);
     navigate('/dashboard');
   }
+  const handleTransfer = async ()=>{
+    console.log("Leaving Room");
+    socketRef.current.emit("transferRoom" , roomId);
+    navigate('/dashboard');
+  }
 
   return (
     <div className="m-2">
@@ -71,6 +76,7 @@ function AdminChatPanel() {
         <button className="border-2 p-2 m-2 bg-blue-500 hover:bg-blue-400 rounded-lg" type="submit">Send</button>
       </form>
       <button className="border-2 p-2  bg-red-600 hover:bg-red-400 rounded-lg" onClick={handleClose}>End chat</button>
+      <button className="border-2 p-2  bg-red-600 hover:bg-red-400 rounded-lg" onClick={handleTransfer}>Transfer</button>
     </div>
   );
 }
