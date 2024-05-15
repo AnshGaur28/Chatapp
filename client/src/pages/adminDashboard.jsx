@@ -25,7 +25,7 @@ export default function AdminDashboard() {
 
     setInterval(() => {
       getClients();
-    }, 10000);
+    }, 3000);
   }, []);
   return (
     <>
