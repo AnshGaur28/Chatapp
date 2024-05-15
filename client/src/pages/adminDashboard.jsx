@@ -3,12 +3,23 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../Components/Navbar";
+import Chatbox from "../Components/Chat/Chatbox";
 export default function AdminDashboard() {
-  const navigate = useNavigate();
-  const [users, setUsers] = useState([]);
-  const handleSubmit = async (SID) => {
-    navigate(`/adminChatPanel/room_${SID}`);
+  const [selectedUser, setSelectedUser] = useState(null);
+
+  const handleUserClick = (user) => {
+    setSelectedUser(user);
   };
+
+  const setUser = async (user) => {
+    setSelectedUser(user);
+  };
+
+  // const navigate = useNavigate();
+  const [users, setUsers] = useState([]);
+  // const handleSubmit = async (SID) => {
+  //   navigate(`/adminChatPanel/room_${SID}`);
+  // };
   useEffect(() => {
     //  Find clients in queue from the data store and display on the screen
     const getClients = async () => {
@@ -27,6 +38,7 @@ export default function AdminDashboard() {
       getClients();
     }, 3000);
   }, []);
+
   return (
     <>
       <div className="bg-gray-50 h-screen flex flex-col">
@@ -43,26 +55,18 @@ export default function AdminDashboard() {
                 } my-2 rounded-lg text-white`}
                 disabled={user.closed}
                 key={user.SID}
-                onClick={() => handleSubmit(user.SID)}
+                onClick={() => handleUserClick(user)}
               >
                 <div>{user.username}</div>
               </button>
             ))}
           </div>
           <div className="w-3/4 m-4 bg-white rounded-lg shadow-lg p-4 flex flex-col">
-            <h1 className="text-xl">Chatbox</h1>
-            <div className="chat-container flex-grow"></div>
-
-            <div className="flex flex-row">
-              <input
-                type="text"
-                placeholder="Type a message..."
-                className="w-full p-2 border border-gray-300 rounded-lg"
-              />
-              <button className="bg-blue-500 text-white px-4 py-2 rounded-lg ml-2">
-                Send
-              </button>
-            </div>
+            {selectedUser ? (
+              <Chatbox user={selectedUser} setUser={setUser} />
+            ) : (
+              <h1 className="text-3xl">Click on a user to start Chatting</h1>
+            )}
           </div>
         </div>
       </div>
