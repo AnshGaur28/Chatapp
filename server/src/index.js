@@ -96,7 +96,7 @@ io.on("connection", (socket) => {
     socket.on("clientLeaveRoom", async () => {
         try {
             console.log("Client leaving room")
-            await User.findOneAndUpdate({ SID: socket.id }, { $set: { messages: [] } , $unset : {roomID:1 , SID:1} });
+            await User.findOneAndUpdate({ SID: socket.id }, { $set: { messages: [], closed: false }, $unset: { roomID: 1, SID: 1 } });
             io.to(`room_${socket.id}`).emit("message", `Client has left`);
         } catch (error) {
             console.error('Error leaving room:', error);
