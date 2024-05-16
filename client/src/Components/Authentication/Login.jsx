@@ -38,7 +38,7 @@ const Login = () => {
       });
       console.log(response);
       sessionStorage.setItem("token", response.data.jwt);
-      sessionStorage.setItem("username", response.data.username);
+      sessionStorage.setItem("username", username);
 
       role == "admin" ? navigate("/dashboard") : navigate("/");
     } catch (error) {
@@ -47,7 +47,8 @@ const Login = () => {
   };
 
   return (
-    <VStack>
+          
+      <VStack>
       <FormControl isRequired>
         <FormLabel>Username</FormLabel>
         <Input

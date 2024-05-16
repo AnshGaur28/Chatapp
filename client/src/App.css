@@ -1,6 +1,13 @@
 .App {
-  min-height: 100vh;
   display: flex;
   background-color: black;
+  height: 100%;
   /* background-color: #f9fafb; */
+}
+
+.html {
+  height: 100%;
+}
+.root {
+  height : 100%;
 }

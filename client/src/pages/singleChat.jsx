@@ -1,71 +1,111 @@
-import {useForm} from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useEffect, useRef, useState } from "react";
 import io from "socket.io-client";
 import { useNavigate } from "react-router-dom";
 
 function SingleChat() {
-  const jwt = sessionStorage.getItem('token')
-    const [messages , setMessages] =  useState([]);
-    const [messageInput, setMessageInput] = useState("");
-    const formRef = useRef(null);
-    const activityRef = useRef(null);
-    const socketRef = useRef(null);
-    const navigate = useNavigate();
-    useEffect(()=>{
-      if(!socketRef.current){        
-        const socket = io("ws://localhost:3000");
-        socketRef.current = socket ;
-        socket.emit('createRoom' , sessionStorage.getItem('token'));
-        socket.on("message" , async (message)=>{
-          setMessages(messages => [...messages , message]);
-        });
-        
+  const jwt = sessionStorage.getItem("token");
+  const [messages, setMessages] = useState([]);
+  const [messageInput, setMessageInput] = useState("");
+  const formRef = useRef(null);
+  const activityRef = useRef(null);
+  const socketRef = useRef(null);
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!socketRef.current) {
+      const socket = io("ws://localhost:3000");
+      socketRef.current = socket;
+      socket.emit("createRoom", sessionStorage.getItem("token"));
+      socket.on("message", async (message) => {
+        setMessages((messages) => [...messages, message]);
+      });
 
-        socket.on("open" , ()=> {
-          console.log('WebSocket connection established.');
-        });
-        socket.on('activity' , (name)=>{
-          activityRef.textContent =  `${name} is typing`
-        });
-      }
-
-    },[]);
-    const onSubmit = async(e)=>{
-        e.preventDefault();
-        if(messageInput.trim()!==""){
-          const time = new Date();
-          const formattedTime = ("0" + time.getHours()).slice(-2) + " : " + ("0"+time.getMinutes()).slice(-2) ;
-          socketRef.current.send({"message" : messageInput , "token" : jwt , "time" : formattedTime});
-        }
-        setMessageInput("");
+      socket.on("open", () => {
+        console.log("WebSocket connection established.");
+      });
+      socket.on("activity", (name) => {
+        activityRef.textContent = `${name} is typing`;
+      });
     }
-    const handleClose = async ()=>{
-      console.log("Leaving Room");
-      socketRef.current.emit("clientLeaveRoom");
-      navigate('/');
+  }, []);
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    if (messageInput.trim() !== "") {
+      const time = new Date();
+      const formattedTime =
+        ("0" + time.getHours()).slice(-2) +
+        " : " +
+        ("0" + time.getMinutes()).slice(-2);
+      socketRef.current.send({
+        message: messageInput,
+        token: jwt,
+        time: formattedTime,
+      });
     }
+    setMessageInput("");
+  };
+  const handleClose = async () => {
+    console.log("Leaving Room");
+    socketRef.current.emit("clientLeaveRoom");
+    navigate("/");
+  };
   return (
     <>
-      <div className="flex flex-col items-center justify-center h-screen bg-gray-50">
+      <div
+        style={{
+          backgroundImage:
+            "url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png')", // Adjust the path as needed
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+        className="flex flex-col justify-center items-center  h-screen bg-gray-100 "
+      >
         <h1 className="font-bold text-xl p-2 text-center">Chatbot</h1>
-        <div className="bg-white shadow-lg rounded-lg w-96 h-96 flex flex-col p-3">
-          <div className="chat-container flex-grow">
-          
-            {messages.map((message , index)=>{
+        <div
+          style={{
+            backgroundImage:
+              "url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png')", // Adjust the path as needed
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+          className="bg-white  flex  h-[600px] w-[1300px] rounded-md flex flex-col p-3 "
+        >
+          <div className="chat-container flex-grow ">
+            {messages.map((message, index) => {
               return (
                 <div key={index}>
-                  {message && message.username && 
-                  <div>
-                    {message.username} : {message.content} {message.time}
-                  </div>
-                  }
-                  {message && message.username==null &&
-                  <div>
-                    {message.content}
-                  </div>
-                  }
+                  {message && message.username && (
+                    <div className="my-4">
+                      <div
+                        className={`flex ${
+                          sessionStorage.getItem("username") == message.username
+                            ? "justify-start"
+                            : "justify-end"
+                        }`}
+                      >
+                        <span
+                          className={`${
+                            sessionStorage.getItem("username") ==
+                            message.username
+                              ? " row bg-[rgb(226,255,195)] "
+                              : " justify-end bg-gray-50 "
+                          } text-black  rounded-md p-2 `}
+                        >
+                          {/* {message.username} : {message.content} */}
+                          {message.content}
+
+                          <span className="text-xs text-gray-600 ml-5">
+                            {message.time}
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                  )}
+                  {message && message.username == null && (
+                    <div>{message.content}</div>
+                  )}
                 </div>
-              )
+              );
             })}
           </div>
           <div className="flex flex-row h-10">
@@ -90,7 +130,7 @@ function SingleChat() {
             </button>
           </div>
         </div>
-        </div>
+      </div>
     </>
   );
 }

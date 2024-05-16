@@ -49,7 +49,7 @@ connectToMongoDB();
 
 io.on("connection", (socket) => {
     console.log(`User ${socket.id}  Connected`);
-    socket.emit('message', {content : 'Welcome to chat app'})
+    // socket.emit('message', {content : 'Welcome to chat app'})
 
     socket.on("createRoom", async (data) => {
         try {
@@ -57,7 +57,7 @@ io.on("connection", (socket) => {
             const { username } = jwt.verify(token, process.env.JWT_SECRET);
             const roomId = `room_${socket.id}`; // Generate a unique room ID, e.g., room_<userId>
             socket.join(roomId); // Join the room
-            io.to(roomId).emit("message", {content : `${username} has joined`});
+            // io.to(roomId).emit("message", {content : `${username} has joined`});
             console.log(`User ${socket.id} joined room ${roomId}`);
         } catch (error) {
             console.error('Error creating room:', error);
@@ -72,7 +72,7 @@ io.on("connection", (socket) => {
             socket.join(roomId); // Join the room
             await User.findOneAndUpdate({username : username} , {$set : {SID : socket.id}})
             await User.findOneAndUpdate({ roomID: roomId }, { $set: { closed: true  } });
-            io.to(roomId).emit("message", {content : `${username} has joined`});
+            // io.to(roomId).emit("message", {content : `${username} has joined`});
         } catch (error) {
             console.error('Error creating room:', error);
         }
@@ -81,7 +81,7 @@ io.on("connection", (socket) => {
     socket.on("leaveRoom", async ({roomId , token}) => {
         try {
             console.log("Admin leaving room", roomId)
-            io.to(roomId).emit("message", {content : `Admin has left`});
+            // io.to(roomId).emit("message", {content : `Admin has left`});
             const { username } = jwt.verify(token, process.env.JWT_SECRET);
             await User.findOneAndUpdate({username} , {$unset : {SID : 1}});
             await User.findOneAndUpdate({ roomID: roomId }, { $set: { closed: false }});
@@ -101,7 +101,7 @@ io.on("connection", (socket) => {
         try {
             console.log("Client leaving room")
             await User.findOneAndUpdate({ SID: socket.id }, { $set: { messages: [] } , $unset : {roomID:1 , SID:1 , closed : 1} });
-            io.to(`room_${socket.id}`).emit("message", {content :`Client has left`});
+            // io.to(`room_${socket.id}`).emit("message", {content :`Client has left`});
         } catch (error) {
             console.error('Error leaving room:', error);
         }
@@ -135,7 +135,7 @@ io.on("connection", (socket) => {
 
     socket.on('disconnect', async () => {
         console.log("Disconnecting")
-        io.to(`room_${socket.id}`).emit('message', `${socket.id.substring(0, 5)} disconnected`);
+        // io.to(`room_${socket.id}`).emit('message', `${socket.id.substring(0, 5)} disconnected`);
         console.log("user disconnected")
         await User.findOneAndUpdate({ SID: socket.id }, { $unset: { SID: 1, roomID: 1 }, $set: { messages: [], closed: false } });
     });

@@ -41,18 +41,18 @@ export default function AdminDashboard() {
 
   return (
     <>
-      <div className="bg-gray-50 h-screen flex flex-col">
+      <div className="bg-gray-200 h-screen flex flex-col">
         <Navbar />
         <div className="flex-grow flex">
-          <div className="w-1/4 m-4 px-2 bg-white rounded-lg shadow-lg text-center">
+          <div className="w-1/4 m-4 px-2 bg-gray-50 rounded-lg shadow-lg text-center ">
             <h1 className="text-xl mt-2 mb-4">Clients</h1>
             {users.map((user) => (
               <button
                 className={`block w-full px-2 py-2 ${
                   user.closed === false
-                    ? "bg-blue-500 hover:bg-blue-400 "
+                    ? "bg-white shadow-xl shadow-gray-300 hover:bg-gray-200 "
                     : "bg-gray-300"
-                } my-2 rounded-lg text-white`}
+                } my-2 rounded-lg text-gray-500`}
                 disabled={user.closed}
                 key={user.SID}
                 onClick={() => handleUserClick(user)}
@@ -61,11 +61,20 @@ export default function AdminDashboard() {
               </button>
             ))}
           </div>
-          <div className="w-3/4 m-4 bg-white rounded-lg shadow-lg p-4 flex flex-col">
+          <div
+            style={{
+              backgroundImage: "url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png')", // Adjust the path as needed
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }}
+            className="w-3/4 m-4 bg-white shadow-lg p-4 flex flex-col bg"
+          >
             {selectedUser ? (
               <Chatbox user={selectedUser} setUser={setUser} />
             ) : (
-              <h1 className="text-3xl">Click on a user to start Chatting</h1>
+              <h1 className="text-3xl text-gray-400">
+                Click on a user to start Chatting
+              </h1>
             )}
           </div>
         </div>
