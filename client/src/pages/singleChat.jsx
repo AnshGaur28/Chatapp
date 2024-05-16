@@ -1,6 +1,6 @@
 import {useForm} from "react-hook-form";
 import { useEffect, useRef, useState } from "react";
-import io  from 'socket.io-client';
+import io from "socket.io-client";
 import { useNavigate } from "react-router-dom";
 
 function SingleChat() {
@@ -82,7 +82,7 @@ function SingleChat() {
     </div>
     <button className="border-2 p-2  bg-red-600 hover:bg-red-400 rounded-lg" onClick={handleClose}>End chat</button>
     </>
-  )
+  );
 }
 
-export default SingleChat ;
+export default SingleChat;

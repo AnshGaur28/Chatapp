@@ -38,6 +38,7 @@ const Login = () => {
       });
       console.log(response);
       sessionStorage.setItem("token", response.data.jwt);
+      sessionStorage.setItem("username", response.data.username);
 
       role == "admin" ? navigate("/dashboard") : navigate("/");
     } catch (error) {
