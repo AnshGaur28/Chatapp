@@ -37,8 +37,6 @@ const Chatbox = ({ user, setUser }) => {
         console.log(messageObj);
         setMessages((messages) => [...messages, messageObj]);
       });
-      socket.on("systemMessage" , async (message)=>{
-      });
       const getMessageHistory = async () => {
         const response = await axios.get(
           "http://localhost:3000/admin/getRoomHistory",
@@ -58,13 +56,12 @@ const Chatbox = ({ user, setUser }) => {
       getMessageHistory();
     }
   }, [roomId]);
-
-  const handleSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
     if (messageInput.trim() !== "") {
-      // Send message to the room
       const time = new Date() ;
       const formattedTime = ("0" + time.getHours()).slice(-2) + " : " + ("0"+time.getMinutes()).slice(-2) ;
+
       socketRef.current.emit("adminMessage", {
         message: messageInput,
         roomId: roomId,
@@ -73,7 +70,8 @@ const Chatbox = ({ user, setUser }) => {
       });
       setMessageInput("");
     }
-  };
+  }
+  
   const handleClose = async () => {
     const token = sessionStorage.getItem('token');
     console.log("Leaving Room");
@@ -115,25 +113,25 @@ const Chatbox = ({ user, setUser }) => {
             })}
         </div>}
       <div className="flex flex-row h-10">
-        <input
-          type="text"
-          value={messageInput}
-          placeholder="Type a message..."
-          onChange={(e) => setMessageInput(e.target.value)}
-          className="w-full p-2 border border-gray-300 rounded-lg"
-        />
-        <button
-          className="bg-blue-500 text-white px-4 py-2 rounded-lg ml-2"
-          onClick={handleSubmit}
-        >
-          Send
-        </button>
-        <button
-          className="bg-red-500 text-white px-4 py-2 rounded-lg ml-2"
-          onClick={handleClose}
-        >
-          End
-        </button>
+          <input
+            type="text"
+            placeholder="Type a message..."
+            onChange={(e) => setMessageInput(e.target.value)}
+            className="w-full p-2 border border-gray-300 rounded-lg"
+            value={messageInput}
+          />
+          <button
+            className="bg-blue-500 text-white px-4 py-2 rounded-lg ml-2 bg-green-600"
+            onClick={onSubmit}
+          >
+            Send
+          </button>
+          <button
+            className="bg-red-500 text-white px-4 py-2 rounded-lg ml-2"
+            onClick={handleClose}
+          >
+            End
+          </button>
         <button
           className="bg-red-500 text-white px-4 py-2 rounded-lg ml-2"
           onClick={openAdminPanel}
