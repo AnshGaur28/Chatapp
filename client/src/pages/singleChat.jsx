@@ -18,6 +18,7 @@ function SingleChat() {
         socket.on("message" , async (message)=>{
           setMessages(messages => [...messages , message]);
         });
+        
 
         socket.on("open" , ()=> {
           console.log('WebSocket connection established.');
@@ -31,7 +32,9 @@ function SingleChat() {
     const onSubmit = async(e)=>{
         if(e.message){
           const message = await e.message;
-          socketRef.current.send({"message" : message , "token" : jwt});
+          const time = new Date();
+        const formattedTime = ("0" + time.getHours()).slice(-2) + " : " + ("0"+time.getMinutes()).slice(-2) ;
+          socketRef.current.send({"message" : message , "token" : jwt , "time" : formattedTime});
         }
         formRef.current.reset();
     }
@@ -46,8 +49,22 @@ function SingleChat() {
       <div className="m-2 ">
       <h1 className="font-bold text-xl p-2">Chat Page</h1>
       <div className="messages-container text-lg">
+          
           {messages.map((message , index)=>{
-            return (<div key={index}>{message}</div>)
+            return (
+              <div key={index}>
+                {message && message.username && 
+                <div>
+                  {message.username} : {message.content} {message.time}
+                </div>
+                }
+                {message && message.username==null &&
+                <div>
+                  {message.content}
+                </div>
+                }
+              </div>
+            )
           })}
       </div>
       <form ref={formRef} onSubmit={handleSubmit(onSubmit)} className="message-form">

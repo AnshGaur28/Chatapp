@@ -15,11 +15,18 @@ const userSchema = new mongoose.Schema({
     SID :{
         type : String ,
     },
-    messages : {
-        type : [String],
-        default:  [] ,
-    },
-
+    messages : [{
+        content : {
+            type :[String],
+            default : [],
+        },
+        username : {
+            type : String ,
+        },
+        time : {
+            type: String,
+        }
+    }],
     roomID : {
         type : String ,
     },

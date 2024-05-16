@@ -26,5 +26,13 @@ const getRoomHistory = async (req, res) => {
     return res.status(500).send({ message: " Internal Servver Error" });
   }
 };
-
-module.exports = { getAllClient, getRoomHistory };
+const getAdmins = async(req, res)=>{
+  try {
+      const admins = await User.find({role : "admin"});
+      // console.log(admins);
+      res.status(200).send({admins});
+  } catch (error) {
+    res.status(500).send("Internal Server Error" , error.message);
+  }
+}
+module.exports = { getAllClient, getRoomHistory , getAdmins };

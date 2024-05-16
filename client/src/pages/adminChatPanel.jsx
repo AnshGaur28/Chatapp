@@ -42,7 +42,9 @@ function AdminChatPanel() {
     e.preventDefault();
     if (messageInput.trim() !== "") {
       // Send message to the room
-      socketRef.current.emit("adminMessage", {message : messageInput , roomId : roomId , token : sessionStorage.getItem('token')} );
+      const time = new Date() ;
+      const formattedTime = ("0" + time.getHours()).slice(-2) + " : " + ("0"+time.getMinutes()).slice(-2) ;
+      socketRef.current.emit("adminMessage", {message : messageInput , roomId : roomId , token : sessionStorage.getItem('token') , time : formattedTime } );
       setMessageInput("");
     }
   };
@@ -62,7 +64,7 @@ function AdminChatPanel() {
       <h1 className="font-bold text-xl p-2">Admin Chat Panel</h1>
       <div className="text-lg">
         {messages.map((message, index) => (
-          <div key={index}>{message}</div>
+          <div key={index}>{message.message}</div>
         ))}
       </div>
       <form onSubmit={handleSubmit}>
