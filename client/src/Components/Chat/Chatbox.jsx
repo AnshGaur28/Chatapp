@@ -98,13 +98,25 @@ const Chatbox = ({ user, setUser }) => {
               <div key={index}>
                 {message && message?.username && (
                   <div className="my-4 ">
-                    <div className={`flex ${sessionStorage.getItem('username')==message.username? 'justify-start' : 'justify-end'}`}>
-                      <span className={`${sessionStorage.getItem('username')==message.username? ' row bg-[rgb(226,255,195)] ' : ' jsutify-end bg-gray-50 '} text-black  rounded-md p-2 `}>
+                    <div
+                      className={`flex ${
+                        sessionStorage.getItem("username") == message.username
+                          ? "justify-end"
+                          : "justify-start"
+                      }`}
+                    >
+                      <span
+                        className={`${
+                          sessionStorage.getItem("username") == message.username
+                            ? " row bg-[rgb(226,255,195)] "
+                            : " justify-end bg-gray-50 "
+                        } text-black  rounded-md p-2 `}
+                      >
                         {/* {message.username} : {message.content} */}
                         {message.content}
-                      <span className="text-xs text-gray-600 ml-5">
-                        {message.time}
-                      </span>
+                        <span className="text-xs text-gray-600 ml-5">
+                          {message.time}
+                        </span>
                       </span>
                     </div>
                   </div>
@@ -135,9 +147,13 @@ const Chatbox = ({ user, setUser }) => {
               <button
                 key={admin.SID}
                 className={`block text-gray-500 ${
-                  admin.SID ? "bg-gray-300" : "bg-white shadow-xl shadow-gray-300 hover:bg-gray-200 "
+                  admin.SID
+                    ? "bg-gray-300"
+                    : "bg-white shadow-xl shadow-gray-300 hover:bg-gray-200 "
                 }  p-2 m-2 rounded-md`}
-                onClick={()=>{handleTransfer(admin.SID)}}
+                onClick={() => {
+                  handleTransfer(admin.SID);
+                }}
               >
                 <div>{admin.username}</div>
               </button>
@@ -145,24 +161,27 @@ const Chatbox = ({ user, setUser }) => {
           })}
         </div>
       )}
+
       <div className="flex flex-row h-10 ">
-        <input
-          type="text"
-          placeholder="Type a message..."
-          onChange={(e) => setMessageInput(e.target.value)}
-          className="w-full p-2 border border-gray-300 rounded-lg"
-          value={messageInput}
-        />
-        <button
-          className="bg-blue-500 text-white px-4 py-2 rounded-lg ml-2 "
-          onClick={onSubmit}
-        >
-          Send
-        </button>
+        <form action="" className="flex flex-row h-10 w-full" onSubmit={onSubmit}>
+          <input
+            type="text"
+            placeholder="Type a message..."
+            onChange={(e) => setMessageInput(e.target.value)}
+            className="w-full p-2 border border-gray-300 rounded-lg"
+            value={messageInput}
+          />
+          <button
+            className="bg-blue-500 text-white px-4 py-2 rounded-lg ml-2 "
+            onClick={onSubmit}
+          >
+            Send
+          </button>
+          </form>
         <button
           className="bg-red-500 text-white px-4 py-2 rounded-lg ml-2"
           onClick={handleClose}
-        >
+          >
           End
         </button>
         <button
