@@ -27,20 +27,25 @@ export default function LoginPage() {
   //   }
   // };
   return (
-    <Box  bg="radial-gradient(circle, rgba(244,236,214,0.9), rgba(255,255,255,1))"  minH="100vh">
+    <Box minHeight='100vh' style={{
+      backgroundImage:
+        "url('/—Pngtree—flat business login box login_1319176.jpg')", // Adjust the path as needed
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+    }}>
       <Container maxW="xl" centerContent>
         <Box
           d="flex"
           justifyContent="center"
           p={3}
-          bg="radial-gradient(circle, rgba(238,154,158,0.4), rgba(152,205,238,1))"
+          bg="radial-gradient(circle, rgba(238,154,158,0.1), rgba(152,205,238,0.1))"
           w="100%"
           m="40px 0 45px 0"
           borderRadius="lg"
           borderWidth="1px"
           shadow="md"
         >
-          <Text fontSize="4xl" fontWeight="bold"   p="20px" color="GrayText" textAlign="center">
+          <Text fontSize="4xl" fontWeight="bold"    color="white" textAlign="center">
             User Authentication
           </Text>
         </Box>
@@ -52,12 +57,12 @@ export default function LoginPage() {
           borderWidth="1px"
           shadow="md"
         >
-          <Tabs variant="soft-rounded" >
-            <TabList mb="1em">
-              <Tab width="50%">Login</Tab>
-              <Tab width="50%">Signup</Tab>
+          <Tabs variant="soft-rounded" colorScheme="brand"   >
+            <TabList mb="1em" >
+              <Tab style={{color : "black"}} width="50%" >Login</Tab>
+              <Tab style={{color : "black"}} width="50%" >Signup</Tab>
             </TabList>
-            <TabPanels>
+            <TabPanels >
               <TabPanel >
                 <Login />
               </TabPanel>
