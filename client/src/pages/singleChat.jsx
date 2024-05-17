@@ -68,7 +68,7 @@ function SingleChat() {
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
-          className="bg-white  flex  h-[600px] w-[1300px] rounded-md flex flex-col p-3 "
+          className="bg-white h-[600px] w-[1300px] rounded-md flex flex-col p-3 "
         >
           <div className="chat-container flex-grow ">
             {messages.map((message, index) => {
@@ -79,8 +79,8 @@ function SingleChat() {
                       <div
                         className={`flex ${
                           sessionStorage.getItem("username") == message.username
-                            ? "justify-start"
-                            : "justify-end"
+                            ? "justify-end"
+                            : "justify-start"
                         }`}
                       >
                         <span
@@ -109,19 +109,25 @@ function SingleChat() {
             })}
           </div>
           <div className="flex flex-row h-10">
-            <input
-              type="text"
-              placeholder="Type a message..."
-              onChange={(e) => setMessageInput(e.target.value)}
-              className="w-full p-2 border border-gray-300 rounded-lg"
-              value={messageInput}
-            />
-            <button
-              className="bg-blue-500 text-white px-4 py-2 rounded-lg ml-2"
-              onClick={onSubmit}
+            <form
+              action=""
+              className="flex flex-row h-10 w-full"
+              onSubmit={onSubmit}
             >
-              Send
-            </button>
+              <input
+                type="text"
+                placeholder="Type a message..."
+                onChange={(e) => setMessageInput(e.target.value)}
+                className="w-full p-2 border border-gray-300 rounded-lg"
+                value={messageInput}
+              />
+              <button
+                className="bg-blue-500 text-white px-4 py-2 rounded-lg ml-2"
+                onClick={onSubmit}
+              >
+                Send
+              </button>
+            </form>
             <button
               className="bg-red-500 text-white px-4 py-2 rounded-lg ml-2"
               onClick={handleClose}
