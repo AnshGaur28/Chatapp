@@ -16,6 +16,7 @@ const Chatbox = ({ user, setUser , socket }) => {
     setInterval(async () => {
       const response = await axios.get("http://localhost:3000/admin/getAdmins");
       setAdmins(response.data.admins);
+      // console.log(admins)
     }, 1000);
     setTransfer(true);
   };
@@ -153,15 +154,18 @@ const Chatbox = ({ user, setUser , socket }) => {
               <button
                 key={admin.SID}
                 className={`block text-gray-500 ${
-                  admin.SID
-                    ? "bg-gray-300"
-                    : "bg-white shadow-xl shadow-gray-300 hover:bg-gray-200 "
+                  (admin.SID && !admin.closed)
+                    ? "bg-white shadow-xl shadow-gray-300 hover:bg-gray-200 "
+                    : "bg-gray-300"
                 }  p-2 m-2 rounded-md`}
+                disabled={!admin.SID || admin.closed}
                 onClick={() => {
                   handleTransfer(admin.SID);
                 }}
               >
-                <div>{admin.username} {admin.SID}</div>
+                <div>
+                  {admin.username} {admin.SID}
+                </div>
               </button>
             );
           })}

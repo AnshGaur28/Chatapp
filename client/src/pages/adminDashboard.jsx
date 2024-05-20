@@ -71,7 +71,7 @@ export default function AdminDashboard() {
               <button
                 className={`block w-full px-2 py-2 ${
                   user.closed === false
-                    ? "bg-white shadow-xl shadow-gray-300 hover:bg-gray-200 "
+                    ? "bg-white shadow-xl shadow-gray-300 hover:bg-gray-200"
                     : "bg-gray-300"
                 } my-2 rounded-lg text-gray-500`}
                 disabled={user.closed}

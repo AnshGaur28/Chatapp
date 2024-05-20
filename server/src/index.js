@@ -70,7 +70,7 @@ io.on("connection", (socket) => {
             const { roomId, token } = data;
             const { username } = jwt.verify(token, process.env.JWT_SECRET);
             socket.join(roomId); // Join the room
-            await User.findOneAndUpdate({username : username} , {$set : {SID : socket.id}})
+            await User.findOneAndUpdate({username : username} , {$set : {SID : socket.id, closed: true}})
             await User.findOneAndUpdate({ roomID: roomId }, { $set: { closed: true  } });
             // io.to(roomId).emit("message", {content : `${username} has joined`});
         } catch (error) {
@@ -91,8 +91,8 @@ io.on("connection", (socket) => {
             console.log("Admin leaving room", roomId)
             // io.to(roomId).emit("message", {content : `Admin has left`});
             const { username } = jwt.verify(token, process.env.JWT_SECRET);
-            await User.findOneAndUpdate({username} , {$unset : {SID : 1}});
-            await User.findOneAndUpdate({ roomID: roomId }, { $set: { closed: false }});
+            // await User.findOneAndUpdate({username} , {$unset : {SID : 1}});
+            await User.findOneAndUpdate({ username }, { $set: { closed: false }});
         } catch (error) {
             console.error('Error leaving room:', error);
         }
