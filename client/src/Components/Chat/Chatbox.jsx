@@ -107,14 +107,16 @@ const Chatbox = ({ user, setUser , socket }) => {
                   <div className="my-4 ">
                     <div
                       className={`flex ${
-                        (sessionStorage.getItem("username") == message.username || message.role == "admin")
+                        sessionStorage.getItem("username") ==
+                          message.username || message.role == "admin"
                           ? "justify-end"
                           : "justify-start"
                       }`}
                     >
                       <span
                         className={`${
-                          (sessionStorage.getItem("username") == message.username || message.role == "admin")
+                          sessionStorage.getItem("username") ==
+                            message.username || message.role == "admin"
                             ? " row bg-[rgb(226,255,195)] "
                             : " justify-end bg-gray-50 "
                         } text-black  rounded-md p-2 `}
@@ -137,43 +139,49 @@ const Chatbox = ({ user, setUser , socket }) => {
         </div>
       </div>
       {transfer && (
-        <div className="w-50 h-50 border-2 border-gray-100 ">
-          <p className="flex justify-end items-start  ">
-            <button
-              className=" text-white w-7 h-7 overflow-hidden  rounded-sm bg-red-600"
-              onClick={closeAdminPanel}
-            >
-              x
-            </button>
-          </p>
-          <h3 className=" flex justify-center items-center">
-            Admin Transfer Panel
-          </h3>
-          {admins.map((admin) => {
-            return (
+        <div className="flex flex-row w-full h-50 justify-end">
+          <div className="flex flex-col mb-2 border-2 border-gray-100 w-56 bg-white">
+            <p className="flex justify-end items-start  ">
               <button
-                key={admin.SID}
-                className={`block text-gray-500 ${
-                  (admin.SID && !admin.closed)
-                    ? "bg-white shadow-xl shadow-gray-300 hover:bg-gray-200 "
-                    : "bg-gray-300"
-                }  p-2 m-2 rounded-md`}
-                disabled={!admin.SID || admin.closed}
-                onClick={() => {
-                  handleTransfer(admin.SID);
-                }}
+                className=" text-white w-7 h-7 overflow-hidden  rounded-sm bg-red-600"
+                onClick={closeAdminPanel}
               >
-                <div>
-                  {admin.username} {admin.SID}
-                </div>
+                x
               </button>
-            );
-          })}
+            </p>
+            <h3 className=" flex justify-center items-center">
+              Admin Transfer Panel
+            </h3>
+            {admins.map((admin) => {
+              return (
+                <button
+                  key={admin.SID}
+                  className={`block text-gray-500 ${
+                    admin.SID && !admin.closed
+                      ? "bg-blue-400 text-white hover:bg-blue-500"
+                      : "bg-gray-300"
+                  }  p-2 m-2 rounded-md`}
+                  disabled={!admin.SID || admin.closed}
+                  onClick={() => {
+                    handleTransfer(admin.SID);
+                  }}
+                >
+                  <div>
+                    {admin.username}
+                  </div>
+                </button>
+              );
+            })}
+          </div>
         </div>
       )}
 
       <div className="flex flex-row h-10 ">
-        <form action="" className="flex flex-row h-10 w-full" onSubmit={onSubmit}>
+        <form
+          action=""
+          className="flex flex-row h-10 w-full"
+          onSubmit={onSubmit}
+        >
           <input
             type="text"
             placeholder="Type a message..."
@@ -187,11 +195,11 @@ const Chatbox = ({ user, setUser , socket }) => {
           >
             Send
           </button>
-          </form>
+        </form>
         <button
           className="bg-red-500 text-white px-4 py-2 rounded-lg ml-2"
           onClick={handleClose}
-          >
+        >
           End
         </button>
         <button
