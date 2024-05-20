@@ -8,7 +8,7 @@ const getAllClient = async (req, res) => {
     return res.status(200).send({ clients });
   } catch (error) {
     console.log(error.message);
-    return res.status(500).send({ message: " Internal Servver Error" });
+    return res.status(500).send({ message: " Internal Server Error" });
   }
 };
 
@@ -18,14 +18,26 @@ const getRoomHistory = async (req, res) => {
     console.log(roomId);
     const clientData = await User.findOne(
       { roomID: roomId },
-      "messages , username"
+      "messages , username , role"
     );
-    return res.status(200).send({username : clientData.username , historyMessages : clientData.messages});
+    return res.status(200).send({username : clientData.username , historyMessages : clientData.messages , role : clientData.role});
   } catch (error) {
     console.log(error.message);
     return res.status(500).send({ message: " Internal Servver Error" });
   }
 };
+const getClientWithSID = async(req, res)=>{
+    console.log("Inside getClientWithSID")
+    try {
+      const userSID = req.query.SID ;
+      console.log(userSID);
+      const user = await User.findOne({SID : userSID}).select("SID username closed");
+      console.log("user" , user);
+      return res.status(200).send(user);
+    } catch (error) {
+      return res.status(500).send({ message: " Internal Servver Error" });
+    }
+}
 const getAdmins = async(req, res)=>{
   try {
       const admins = await User.find({role : "admin"});
@@ -35,4 +47,4 @@ const getAdmins = async(req, res)=>{
     res.status(500).send("Internal Server Error" , error.message);
   }
 }
-module.exports = { getAllClient, getRoomHistory , getAdmins };
+module.exports = { getAllClient, getRoomHistory , getAdmins  , getClientWithSID};

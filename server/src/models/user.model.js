@@ -25,6 +25,9 @@ const userSchema = new mongoose.Schema({
         },
         time : {
             type: String,
+        },
+        role : {
+            type : String,
         }
     }],
     roomID : {

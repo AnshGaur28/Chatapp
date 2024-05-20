@@ -78,6 +78,14 @@ io.on("connection", (socket) => {
         }
 
     });
+    socket.on('updateAdmin' , async(username)=>{
+        try {
+            const admin = await User.findOneAndUpdate({username : username} , { $set : {SID : socket.id}});
+            console.log("updated admin" , admin);
+        } catch (error) {
+            console.error('Error Updating room:', error);
+        }
+    })
     socket.on("leaveRoom", async ({roomId , token}) => {
         try {
             console.log("Admin leaving room", roomId)
@@ -89,9 +97,11 @@ io.on("connection", (socket) => {
             console.error('Error leaving room:', error);
         }
     })
-    socket.on("transferRoom", async (roomId) => {
+    socket.on("transferRequest", async ({ roomId , adminSID  }) => {
+        console.log(roomId , adminSID) ;
         try {
-            await User.findOneAndUpdate({ roomID: roomId }, { $set: { closed: false } });
+            console.log('Inside Transfer Request');
+            io.to(adminSID).emit("transferRequest" , roomId);
         } catch (error) {
             console.error('Error Transfering room:', error);
         }
@@ -109,24 +119,24 @@ io.on("connection", (socket) => {
 
     socket.on("adminMessage", async (data) => {
         const { message, roomId, token , time } = data;
-        const { username } = jwt.verify(token, process.env.JWT_SECRET);
+        const { username , role} = jwt.verify(token, process.env.JWT_SECRET);
         const messageObj =  {username : username , content : `${message}` ,  time : time} ;
         io.to(roomId).emit("message", messageObj);
         console.log(`Admin sent message to room ${roomId}: ${message}`);
         const user = await User.findOneAndUpdate(
             { roomID: roomId },
-            { $push: { messages: {username : username  , content :`${data.message}` , time :  data.time } } },
+            { $push: { messages: {username : username  , content :`${data.message}` , time :  data.time , role : role } } },
         );
     });
     socket.on("message", async (data) => {
         console.log('message', data.message)
         const token = data.token;
-        const { username } = jwt.verify(token, process.env.JWT_SECRET);
+        const { username , role } = jwt.verify(token, process.env.JWT_SECRET);
         const messageObj =  {username : username ,  content : `${data.message}` ,  time : data.time} ;
         io.to(`room_${socket.id}`).emit("message", messageObj);
         const user = await User.findOneAndUpdate(
             { username: username },
-            { $push: { messages: { username : username , content :`${data.message}` , time :  data.time }}, $set: { SID: socket.id, roomID: `room_${socket.id}` } },
+            { $push: { messages: { username : username , content :`${data.message}` , time :  data.time , role : role }}, $set: { SID: socket.id, roomID: `room_${socket.id}` } },
         );
         await user.save();
         console.log(user);

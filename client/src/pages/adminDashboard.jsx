@@ -1,13 +1,14 @@
 /* eslint-disable react/jsx-key */
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import Navbar from "../Components/Navbar";
 import Chatbox from "../Components/Chat/Chatbox";
+import { io } from "socket.io-client";
 export default function AdminDashboard() {
   const [selectedUser, setSelectedUser] = useState(null);
 
   const handleUserClick = (user) => {
+    console.log(user);
     setSelectedUser(user);
   };
 
@@ -16,12 +17,20 @@ export default function AdminDashboard() {
   };
 
   // const navigate = useNavigate();
+  const token = sessionStorage.getItem('token');
   const [users, setUsers] = useState([]);
+  const socketRef = useRef(null); 
   // const handleSubmit = async (SID) => {
   //   navigate(`/adminChatPanel/room_${SID}`);
   // };
   useEffect(() => {
-    //  Find clients in queue from the data store and display on the screen
+    if (!socketRef.current) {
+      const socket = io("ws://localhost:3000");
+      socketRef.current = socket;
+      const username = sessionStorage.getItem('username');
+      socket.emit('updateAdmin' , username);
+      console.log(socket);
+    }
     const getClients = async () => {
       try {
         const response = await axios.get(
@@ -33,11 +42,23 @@ export default function AdminDashboard() {
       }
     };
     getClients();
-
     setInterval(() => {
       getClients();
     }, 3000);
-  }, []);
+    socketRef.current.on('transferRequest' , async (roomId)=>{
+      console.log("viruj admin" , roomId)
+      socketRef.current.emit("joinRoom", { roomId: roomId, token: token });  
+      const userSID = roomId.slice(5);
+      console.log(userSID);
+      const response = await axios.get("http://localhost:3000/admin/getClientWithSID" , {params : { SID : userSID}});
+      console.log(response.data);
+      setSelectedUser(response.data);
+    });
+    //  Find clients in queue from the data store and display on the screen
+    
+
+    
+  }, [socketRef.current]);
 
   return (
     <>
@@ -70,7 +91,7 @@ export default function AdminDashboard() {
             className="w-3/4 m-4 bg-white shadow-lg p-4 flex flex-col bg"
           >
             {selectedUser ? (
-              <Chatbox user={selectedUser} setUser={setUser} />
+              <Chatbox user={selectedUser} setUser={setUser} socket={socketRef.current} />
             ) : (
               <h1 className="text-3xl text-gray-400">
                 Click on a user to start Chatting

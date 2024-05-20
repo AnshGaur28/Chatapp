@@ -1,8 +1,8 @@
+/* eslint-disable react/prop-types */
 import { useEffect, useState, useRef } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import io from "socket.io-client";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
-const Chatbox = ({ user, setUser }) => {
+const Chatbox = ({ user, setUser , socket }) => {
   const { SID } = user;
   const roomId = `room_${SID}`;
   const [messages, setMessages] = useState([]);
@@ -27,15 +27,16 @@ const Chatbox = ({ user, setUser }) => {
 
   useEffect(() => {
     if (!socketRef.current) {
-      const socket = io("ws://localhost:3000");
       socketRef.current = socket;
       const token = sessionStorage.getItem("token");
+      console.log(socket)
       console.log(token);
       socket.emit("joinRoom", { roomId: roomId, token: token });
       socketRef.current.on("message", async (messageObj) => {
         console.log(messageObj);
         setMessages((messages) => [...messages, messageObj]);
       });
+      
       const getMessageHistory = async () => {
         const response = await axios.get(
           "http://localhost:3000/admin/getRoomHistory",
@@ -44,7 +45,8 @@ const Chatbox = ({ user, setUser }) => {
         console.log(
           "Admin chat panel",
           response.data.historyMessages,
-          response.data.username
+          response.data.username,
+          response.data
         );
 
         setMessages((messages) => [
@@ -54,7 +56,7 @@ const Chatbox = ({ user, setUser }) => {
       };
       getMessageHistory();
     }
-  }, [roomId]);
+  }, []);
   const onSubmit = async (e) => {
     e.preventDefault();
     if (messageInput.trim() !== "") {
@@ -70,6 +72,7 @@ const Chatbox = ({ user, setUser }) => {
         token: sessionStorage.getItem("token"),
         time: formattedTime,
       });
+
       setMessageInput("");
     }
   };
@@ -82,9 +85,12 @@ const Chatbox = ({ user, setUser }) => {
     navigate("/dashboard");
   };
   const handleTransfer = async(adminSID)=>{
-    console.log("inside handleTransfer")
-    socketRef.current.emit("transferRoom" , roomId);
-    navigate('/dashboard');
+    const token = sessionStorage.getItem('token');
+    console.log("inside handle Transfer" , roomId , adminSID)
+    socketRef.current.emit("leaveRoom" , { roomId: roomId, token: token });
+    socketRef.current.emit("transferRequest" , {roomId, adminSID});
+    setUser(null);
+    window.location.reload();
   }
 
   return (
@@ -100,14 +106,14 @@ const Chatbox = ({ user, setUser }) => {
                   <div className="my-4 ">
                     <div
                       className={`flex ${
-                        sessionStorage.getItem("username") == message.username
+                        (sessionStorage.getItem("username") == message.username || message.role == "admin")
                           ? "justify-end"
                           : "justify-start"
                       }`}
                     >
                       <span
                         className={`${
-                          sessionStorage.getItem("username") == message.username
+                          (sessionStorage.getItem("username") == message.username || message.role == "admin")
                             ? " row bg-[rgb(226,255,195)] "
                             : " justify-end bg-gray-50 "
                         } text-black  rounded-md p-2 `}
@@ -155,7 +161,7 @@ const Chatbox = ({ user, setUser }) => {
                   handleTransfer(admin.SID);
                 }}
               >
-                <div>{admin.username}</div>
+                <div>{admin.username} {admin.SID}</div>
               </button>
             );
           })}
