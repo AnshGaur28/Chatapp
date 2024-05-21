@@ -58,24 +58,24 @@ function SingleChat() {
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
-        className="flex flex-col justify-center items-center  h-screen bg-gray-100 "
+        className="flex flex-col justify-center items-center h-screen bg-gray-200 p-4"
       >
-        <h1 className="font-bold text-xl p-2 text-center">Chatbot</h1>
+        <h1 className="font-bold text-xl p-2 text-center">Client Chat</h1>
         <div
-          style={{
-            backgroundImage:
-              "url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png')", // Adjust the path as needed
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-          className="bg-white h-[600px] w-[1300px] rounded-md flex flex-col p-3 "
+          // style={{
+          //   backgroundImage:
+          //     "url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png')", // Adjust the path as needed
+          //   backgroundSize: "cover",
+          //   backgroundPosition: "center",
+          // }}
+          className="bg-white w-1/2 h-full rounded-lg flex flex-col p-3 shadow-2xl"
         >
           <div className="chat-container flex-grow ">
             {messages.map((message, index) => {
               return (
                 <div key={index}>
                   {message && message.username && (
-                    <div className="my-4">
+                    <div className="my-4 mx-4">
                       <div
                         className={`flex ${
                           sessionStorage.getItem("username") == message.username
@@ -108,10 +108,10 @@ function SingleChat() {
               );
             })}
           </div>
-          <div className="flex flex-row h-10">
+          <div className="flex flex-row h-11">
             <form
               action=""
-              className="flex flex-row h-10 w-full"
+              className="flex flex-row h-full w-full"
               onSubmit={onSubmit}
             >
               <input

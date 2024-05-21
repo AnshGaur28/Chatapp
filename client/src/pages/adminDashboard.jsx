@@ -6,6 +6,7 @@ import Chatbox from "../Components/Chat/Chatbox";
 import { io } from "socket.io-client";
 export default function AdminDashboard() {
   const [selectedUser, setSelectedUser] = useState(null);
+  const adminUsername = sessionStorage.getItem("username");
 
   const handleUserClick = (user) => {
     console.log(user);
@@ -63,7 +64,7 @@ export default function AdminDashboard() {
   return (
     <>
       <div className="bg-white h-screen flex flex-col">
-        <Navbar />
+        <Navbar username={adminUsername}/>
         <div className="flex-grow flex ">
           <div className="w-1/4 m-4 px-2 bg-[#5155c2] rounded-lg shadow-lg text-center " >
             <h1 className="text-xl text-white mt-2 mb-4">Clients</h1>
