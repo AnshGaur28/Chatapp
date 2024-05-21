@@ -21,7 +21,6 @@ const Login = () => {
   const [show, setShow] = useState(false);
   const [username, setUsername] = useState();
   const [password, setPassword] = useState();
-  const [role, setRole] = useState();
 
   const handleClick = () => {
     setShow(!show);
@@ -31,6 +30,7 @@ const Login = () => {
     // const { username, password, role } = e;
     try {
       // console.log("Request is made");
+      const role = "admin"
       const response = await axios.post("http://localhost:3000/auth/login", {
         username,
         password,
@@ -40,7 +40,7 @@ const Login = () => {
       sessionStorage.setItem("token", response.data.jwt);
       sessionStorage.setItem("username", username);
 
-      role == "admin" ? navigate("/dashboard") : navigate("/");
+      navigate("/dashboard")
     } catch (error) {
       throw new Error(error.message);
     }
@@ -75,15 +75,7 @@ const Login = () => {
         </InputGroup>
       </FormControl>
 
-      <Select
-        placeholder="Select option"
-        onChange={(e) => {
-          setRole(e.target.value);
-        }}
-      >
-        <option value="admin">Admin</option>
-        <option value="client">Client</option>
-      </Select>
+      
 
       <Button
         colorScheme="purple"

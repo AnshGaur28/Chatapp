@@ -6,7 +6,6 @@ const userSchema = new mongoose.Schema({
     },
     password : {
         type : String ,
-        required : true ,
     },
     role : {
         type : String ,
@@ -36,6 +35,12 @@ const userSchema = new mongoose.Schema({
     closed : {
         type : Boolean ,
         default : false ,
+    },
+    mobile : {
+        type : Number ,
+    },
+    email : {
+        type : String ,
     }
 
 });

@@ -35,4 +35,29 @@ const authController = async (req ,res)=>{
         }
 }
 
-module.exports = authController ;
+const saveClient = async(req , res)=>{
+  const {username , role , email , mobile} = req.body ;
+  try {
+    const newUser = new User({
+      username : username ,
+      role : role ,
+      email : email ,
+      mobile : mobile ,
+    });
+    await newUser.save() ;
+    const token = await jwt.sign(
+      {
+        username : username ,
+        email : email,
+        mobile : mobile ,
+        role: role,
+      },
+      process.env.JWT_SECRET
+    );
+    return res.status(200).send({message : "Successfully saved Client" , jwt : token });
+  } catch (error) {
+    res.status(500).send({ error: 'Internal Server Error' })
+  }
+}
+
+module.exports = {authController , saveClient} ;

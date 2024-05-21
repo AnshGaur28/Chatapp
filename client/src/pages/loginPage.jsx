@@ -46,7 +46,7 @@ export default function LoginPage() {
           shadow="md"
         >
           <Text fontSize="4xl" fontWeight="bold"    color="white" textAlign="center">
-            User Authentication
+            Admin Authentication
           </Text>
         </Box>
         <Box
