@@ -91,8 +91,8 @@ io.on("connection", (socket) => {
             console.log("Admin leaving room", roomId)
             // io.to(roomId).emit("message", {content : `Admin has left`});
             const { username } = jwt.verify(token, process.env.JWT_SECRET);
-            // await User.findOneAndUpdate({username} , {$unset : {SID : 1}});
-            await User.findOneAndUpdate({ username }, { $set: { closed: false }});
+            await User.findOneAndUpdate({username} , {$unset : {SID : 1} , $set: { closed: false }});
+            await User.findOneAndUpdate({ roomId }, { $set: { closed: false }});
         } catch (error) {
             console.error('Error leaving room:', error);
         }

@@ -117,13 +117,13 @@ const Chatbox = ({ user, setUser , socket }) => {
                         className={`${
                           sessionStorage.getItem("username") ==
                             message.username || message.role == "admin"
-                            ? " row bg-[rgb(226,255,195)] "
-                            : " justify-end bg-gray-50 "
+                            ? " row bg-[#C2D6FC] "
+                            : " justify-end bg-white text-black "
                         } text-black  rounded-md p-2 `}
                       >
                         {/* {message.username} : {message.content} */}
                         {message.content}
-                        <span className="text-xs text-gray-600 ml-5">
+                        <span className={`text-xs text-black ml-5 `} >
                           {message.time}
                         </span>
                       </span>
@@ -190,23 +190,23 @@ const Chatbox = ({ user, setUser , socket }) => {
             value={messageInput}
           />
           <button
-            className="bg-blue-500 text-white px-4 py-2 rounded-lg ml-2 "
+            className="text-white mx-4 rounded-lg ml-2 "
             onClick={onSubmit}
           >
-            Send
+            <img src="send.png" className="h-[30px] w-[30px] "/>
           </button>
         </form>
         <button
-          className="bg-red-500 text-white px-4 py-2 rounded-lg ml-2"
+          className=" text-white mx-4 rounded-lg ml-2"
           onClick={handleClose}
         >
-          End
+          <img src="/logout.png" className="h-[30px] w-[30px] "/>
         </button>
         <button
-          className="bg-yellow-500 text-white px-4 py-2 rounded-lg ml-2"
+          className=" text-white mx-4  rounded-lg ml-2"
           onClick={openAdminPanel}
         >
-          Transfer
+            <img src="transfer.png" className="h-[30px] w-[30px] "/>
         </button>
       </div>
     </>

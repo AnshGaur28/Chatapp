@@ -21,7 +21,7 @@ export default function ClientForm() {
       });
       sessionStorage.setItem('token' , response.data.jwt)
       sessionStorage.setItem("username", username);
-      navigate('/');
+      navigate('/singleChat');
     } catch (error) {
       console.log("Error Occurred", error.message);
     }
