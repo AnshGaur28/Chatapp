@@ -6,6 +6,7 @@ import EmojiPicker from 'emoji-picker-react';
 
 
 function SingleChat() {
+  const chatContainerRef = useRef(null);
   const jwt = sessionStorage.getItem("token");
   const [messages, setMessages] = useState([]);
   const [messageInput, setMessageInput] = useState("");
@@ -30,7 +31,12 @@ function SingleChat() {
         activityRef.textContent = `${name} is typing`;
       });
     }
-  }, []);
+
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop =
+        chatContainerRef.current.scrollHeight;
+    }
+  }, [messages]);
   const onSubmit = async (e) => {
     e.preventDefault();
     if (messageInput.trim() !== "") {
@@ -79,12 +85,15 @@ function SingleChat() {
           // }}
           className="bg-white w-1/2 h-full rounded-lg flex flex-col flex-grow p-3 shadow-2xl"
         >
-          <div className="chat-container flex flex-col flex-grow ">
+          <div
+            className="chat-container flex flex-col flex-grow h-64 overflow-y-auto"
+            ref={chatContainerRef}
+          >
             {messages.map((message, index) => {
               return (
-                <div key={index}>
+                <div className="scroller-item text-md" key={index}>
                   {message && message.username && (
-                    <div className="my-4 mx-4">
+                    <div className="my-2 mx-4">
                       <div
                         className={`flex ${
                           sessionStorage.getItem("username") == message.username
@@ -116,17 +125,39 @@ function SingleChat() {
                 </div>
               );
             })}
-          </div>
-          <div className="relative z-50 fixed bottom-0 right-0">
+
             {emoji && (
-              <div className="z-50 flex flex-row w-full h-50 justify-end ">
-                <div className="flex flex-col mb-2 border-2 border-gray-100 w-80 bg-white rounded-lg overflow-hidden">
-                <EmojiPicker onEmojiClick={handleEmojiClick} width={320} height={400} open={emoji} /> 
+              <div className="fixed flex flex-row w-full justify-start bottom-20">
+                <div className="flex flex-col mb-2 border-2 border-gray-100 rounded-lg overflow-hidden">
+                  <EmojiPicker
+                    onEmojiClick={handleEmojiClick}
+                    width={300}
+                    height={400}
+                    open={emoji}
+                  />
                 </div>
               </div>
             )}
           </div>
-          <div className="flex flex-row h-11">
+          {/* <div className="z-50 fixed bottom-20 right-65">
+            {emoji && (
+              <div className="z-50 flex flex-row w-full h-50 justify-end ">
+                <div className="flex flex-col mb-2 border-2 border-gray-100 w-80 bg-white rounded-lg overflow-hidden">
+                <EmojiPicker onEmojiClick={handleEmojiClick} width={300} height={300} open={emoji} /> 
+                </div>
+              </div>
+            )}
+          </div> */}
+          <div className="flex flex-row h-11 mt-2">
+            <button
+              className="flex justify-center items-center "
+              onClick={() => setEmoji(!emoji)}
+            >
+              <img
+                className=" flex items-end justify-center mx-2 h-[30px] w-[30px]"
+                src="/happy.png"
+              />
+            </button>
             <form
               action=""
               className="flex flex-row h-full w-full"
@@ -139,17 +170,15 @@ function SingleChat() {
                 className="w-full p-2 border border-gray-300 rounded-lg"
                 value={messageInput}
               />
-            
+
               <button
                 className="bg-blue-500 text-white px-4 py-2 rounded-lg ml-2"
                 onClick={onSubmit}
               >
-              Send
+                Send
               </button>
-              
             </form>
-            <button className="flex justify-center items-center " onClick={()=> setEmoji(!emoji) }><img className=" flex items-end justify-center mx-2 h-[30px] w-[30px]" src="/happy.png"/></button>
-            
+
             <button
               className="bg-red-500 text-white px-4 py-2 rounded-lg ml-2"
               onClick={handleClose}
@@ -157,9 +186,7 @@ function SingleChat() {
               End
             </button>
           </div>
-          
         </div>
-        
       </div>
     </>
   );

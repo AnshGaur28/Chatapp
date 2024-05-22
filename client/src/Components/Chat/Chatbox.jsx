@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import EmojiPicker from 'emoji-picker-react';
 const Chatbox = ({ user, setUser , socket }) => {
+  const chatContainerRef = useRef(null);
   const { SID } = user;
   const roomId = `room_${SID}`;
   const [messages, setMessages] = useState([]);
@@ -59,7 +60,12 @@ const Chatbox = ({ user, setUser , socket }) => {
       };
       getMessageHistory();
     }
-  }, []);
+
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop =
+        chatContainerRef.current.scrollHeight;
+    }
+  }, [messages]);
 
   const handleEmojiClick = (emojiData) => {
     setMessageInput(messageInput + emojiData.emoji);
@@ -105,13 +111,16 @@ const Chatbox = ({ user, setUser , socket }) => {
     <>
       {/* <h1>Currently chatting with {user.username}</h1> */}
 
-      <div className="chat-container flex-grow ">
-        <div className="text-lg">
+      <div
+        className="chat-container h-64 flex-grow overflow-y-auto"
+        ref={chatContainerRef}
+      >
+        <div className="text-sm">
           {messages.map((message, index) => {
             return (
               <div key={index}>
                 {message && message?.username && (
-                  <div className="my-4 ">
+                  <div className="my-2 mx-4">
                     <div
                       className={`flex ${
                         sessionStorage.getItem("username") ==
@@ -130,9 +139,14 @@ const Chatbox = ({ user, setUser , socket }) => {
                       >
                         {/* {message.username} : {message.content} */}
                         {message.content}
-                        <span className={`${
-                          sessionStorage.getItem("username") ==
-                            message.username || message.role == "admin" ? "text-white" : "text-black"} text-xs ml-5 `}>
+                        <span
+                          className={`${
+                            sessionStorage.getItem("username") ==
+                              message.username || message.role == "admin"
+                              ? "text-white"
+                              : "text-black"
+                          } text-xs ml-5 `}
+                        >
                           {message.time}
                         </span>
                       </span>
@@ -146,6 +160,19 @@ const Chatbox = ({ user, setUser , socket }) => {
             );
           })}
         </div>
+
+        {emoji && (
+          <div className="fixed flex flex-row w-full justify-start bottom-20">
+            <div className="flex flex-col mb-2 border-2 border-gray-100 rounded-lg overflow-hidden">
+              <EmojiPicker
+                onEmojiClick={handleEmojiClick}
+                width={300}
+                height={400}
+                open={emoji}
+              />
+            </div>
+          </div>
+        )}
       </div>
       {transfer && (
         <div className="flex flex-row w-full h-50 justify-end">
@@ -175,9 +202,7 @@ const Chatbox = ({ user, setUser , socket }) => {
                     handleTransfer(admin.SID);
                   }}
                 >
-                  <div>
-                    {admin.username}
-                  </div>
+                  <div>{admin.username}</div>
                 </button>
               );
             })}
@@ -185,50 +210,56 @@ const Chatbox = ({ user, setUser , socket }) => {
         </div>
       )}
 
-      {emoji && (
-        <div className="flex flex-row w-full h-50 justify-end ">
-          <div className="flex flex-col mb-2 border-2 border-gray-100 w-80 bg-white rounded-lg overflow-hidden">
+      {/* {emoji && (
+        <div className="flex flex-row w-full h-50 justify-start">
+          <div className="fixed flex flex-col mb-2 border-2 border-gray-100 w-80 bg-white rounded-lg overflow-hidden">
           <EmojiPicker onEmojiClick={handleEmojiClick} width={320} height={400} open={emoji} /> 
           </div>
         </div>
-      )}
+      )} */}
 
       <div className="flex flex-row h-10 ">
+        <button
+          className="flex justify-center items-center "
+          onClick={() => setEmoji(!emoji)}
+        >
+          <img
+            className=" flex items-end justify-center mx-2 h-[30px] w-[30px]"
+            src="/happy.png"
+          />
+        </button>
         <form
           action=""
           className="flex flex-row h-10 w-full"
           onSubmit={onSubmit}
         >
           <input
-          name="chatInput"
+            name="chatInput"
             type="text"
             placeholder="Type a message..."
             onChange={(e) => setMessageInput(e.target.value)}
             className="w-full p-2 border border-gray-300 rounded-lg"
             value={messageInput}
           />
-          
-          
-          
+
           <button
             className="text-white mx-4 rounded-lg ml-2 "
             onClick={onSubmit}
           >
-            <img src="send.png" className="h-[30px] w-[30px] "/>
+            <img src="send.png" className="h-[30px] w-[30px] " />
           </button>
         </form>
-        <button className="flex justify-center items-center " onClick={()=> setEmoji(!emoji) }><img className=" flex items-end justify-center mx-2 h-[30px] w-[30px]" src="/happy.png"/></button>
         <button
           className=" text-white mx-4 rounded-lg ml-2"
           onClick={handleClose}
         >
-          <img src="/logout.png" className="h-[30px] w-[30px] "/>
+          <img src="/logout.png" className="h-[30px] w-[30px] " />
         </button>
         <button
           className=" text-white mx-4  rounded-lg ml-2"
           onClick={openAdminPanel}
         >
-            <img src="transfer.png" className="h-[30px] w-[30px] "/>
+          <img src="transfer.png" className="h-[30px] w-[30px] " />
         </button>
       </div>
     </>
