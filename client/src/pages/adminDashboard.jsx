@@ -74,7 +74,7 @@ export default function AdminDashboard() {
                   user.closed === false
                     ? "bg-[#415a77] text-white shadow-gray-300  hover:bg-[#1b263b]"
                     : "bg-gray-300"
-                } my-2  text-gray-700 rounded-full`}
+                } my-2  text-gray-700 `}
                 disabled={user.closed}
                 key={user.SID}
                 onClick={() => handleUserClick(user)}

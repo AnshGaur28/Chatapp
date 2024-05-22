@@ -38,6 +38,19 @@ const authController = async (req ,res)=>{
 const saveClient = async(req , res)=>{
   const {username , role , email , mobile} = req.body ;
   try {
+    const existUser = await User.findOne({username : username , role : role , email : email , mobile : mobile })
+    if(existUser){
+      const token =  jwt.sign(
+        {
+          username : username ,
+          email : email,
+          mobile : mobile ,
+          role: role,
+        },
+        process.env.JWT_SECRET
+      );
+      return res.status(200).send({message : "Successfully saved Client" , jwt : token });
+    }
     const newUser = new User({
       username : username ,
       role : role ,

@@ -2,6 +2,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import EmojiPicker from 'emoji-picker-react';
 const Chatbox = ({ user, setUser , socket }) => {
   const { SID } = user;
   const roomId = `room_${SID}`;
@@ -11,6 +12,7 @@ const Chatbox = ({ user, setUser , socket }) => {
   const navigate = useNavigate();
   const [transfer, setTransfer] = useState(false);
   const [admins, setAdmins] = useState([]);
+  const [emoji , setEmoji] = useState(false);
 
   const openAdminPanel = async () => {
     setInterval(async () => {
@@ -58,6 +60,11 @@ const Chatbox = ({ user, setUser , socket }) => {
       getMessageHistory();
     }
   }, []);
+
+  const handleEmojiClick = (emojiData) => {
+    setMessageInput(messageInput + emojiData.emoji);
+  };
+
   const onSubmit = async (e) => {
     e.preventDefault();
     if (messageInput.trim() !== "") {
@@ -178,6 +185,14 @@ const Chatbox = ({ user, setUser , socket }) => {
         </div>
       )}
 
+      {emoji && (
+        <div className="flex flex-row w-full h-50 justify-end ">
+          <div className="flex flex-col mb-2 border-2 border-gray-100 w-80 bg-white rounded-lg overflow-hidden">
+          <EmojiPicker onEmojiClick={handleEmojiClick} width={320} height={400} open={emoji} /> 
+          </div>
+        </div>
+      )}
+
       <div className="flex flex-row h-10 ">
         <form
           action=""
@@ -185,12 +200,16 @@ const Chatbox = ({ user, setUser , socket }) => {
           onSubmit={onSubmit}
         >
           <input
+          name="chatInput"
             type="text"
             placeholder="Type a message..."
             onChange={(e) => setMessageInput(e.target.value)}
             className="w-full p-2 border border-gray-300 rounded-lg"
             value={messageInput}
           />
+          
+          
+          
           <button
             className="text-white mx-4 rounded-lg ml-2 "
             onClick={onSubmit}
@@ -198,6 +217,7 @@ const Chatbox = ({ user, setUser , socket }) => {
             <img src="send.png" className="h-[30px] w-[30px] "/>
           </button>
         </form>
+        <button className="flex justify-center items-center " onClick={()=> setEmoji(!emoji) }><img className=" flex items-end justify-center mx-2 h-[30px] w-[30px]" src="/happy.png"/></button>
         <button
           className=" text-white mx-4 rounded-lg ml-2"
           onClick={handleClose}

@@ -2,12 +2,15 @@ import { useForm } from "react-hook-form";
 import { useEffect, useRef, useState } from "react";
 import io from "socket.io-client";
 import { useNavigate } from "react-router-dom";
+import EmojiPicker from 'emoji-picker-react';
+
 
 function SingleChat() {
   const jwt = sessionStorage.getItem("token");
   const [messages, setMessages] = useState([]);
   const [messageInput, setMessageInput] = useState("");
-  const formRef = useRef(null);
+  const [emoji , setEmoji] = useState(false);
+
   const activityRef = useRef(null);
   const socketRef = useRef(null);
   const navigate = useNavigate();
@@ -44,9 +47,15 @@ function SingleChat() {
     }
     setMessageInput("");
   };
+  
+  const handleEmojiClick = (emojiData) => {
+    setMessageInput(messageInput + emojiData.emoji);
+  };
   const handleClose = async () => {
     console.log("Leaving Room");
     socketRef.current.emit("clientLeaveRoom");
+    sessionStorage.removeItem('token')
+    sessionStorage.removeItem('username')
     navigate("/");
   };
   return (
@@ -58,7 +67,7 @@ function SingleChat() {
         //   backgroundSize: "cover",
         //   backgroundPosition: "center",
         // }}
-        className="flex flex-col justify-center items-center h-screen bg-gray-200 p-4"
+        className="flex flex-col justify-center items-center min-h-screen bg-gray-200 p-4 flex-grow"
       >
         <h1 className="font-bold text-xl p-2 text-center">Client Chat</h1>
         <div
@@ -68,9 +77,9 @@ function SingleChat() {
           //   backgroundSize: "cover",
           //   backgroundPosition: "center",
           // }}
-          className="bg-white w-1/2 h-full rounded-lg flex flex-col p-3 shadow-2xl"
+          className="bg-white w-1/2 h-full rounded-lg flex flex-col flex-grow p-3 shadow-2xl"
         >
-          <div className="chat-container flex-grow ">
+          <div className="chat-container flex flex-col flex-grow ">
             {messages.map((message, index) => {
               return (
                 <div key={index}>
@@ -108,6 +117,15 @@ function SingleChat() {
               );
             })}
           </div>
+          <div className="relative z-50 fixed bottom-0 right-0">
+            {emoji && (
+              <div className="z-50 flex flex-row w-full h-50 justify-end ">
+                <div className="flex flex-col mb-2 border-2 border-gray-100 w-80 bg-white rounded-lg overflow-hidden">
+                <EmojiPicker onEmojiClick={handleEmojiClick} width={320} height={400} open={emoji} /> 
+                </div>
+              </div>
+            )}
+          </div>
           <div className="flex flex-row h-11">
             <form
               action=""
@@ -121,13 +139,17 @@ function SingleChat() {
                 className="w-full p-2 border border-gray-300 rounded-lg"
                 value={messageInput}
               />
+            
               <button
                 className="bg-blue-500 text-white px-4 py-2 rounded-lg ml-2"
                 onClick={onSubmit}
               >
-                Send
+              Send
               </button>
+              
             </form>
+            <button className="flex justify-center items-center " onClick={()=> setEmoji(!emoji) }><img className=" flex items-end justify-center mx-2 h-[30px] w-[30px]" src="/happy.png"/></button>
+            
             <button
               className="bg-red-500 text-white px-4 py-2 rounded-lg ml-2"
               onClick={handleClose}
@@ -135,7 +157,9 @@ function SingleChat() {
               End
             </button>
           </div>
+          
         </div>
+        
       </div>
     </>
   );
