@@ -117,13 +117,15 @@ const Chatbox = ({ user, setUser , socket }) => {
                         className={`${
                           sessionStorage.getItem("username") ==
                             message.username || message.role == "admin"
-                            ? " row bg-[#C2D6FC] "
-                            : " justify-end bg-white text-black "
+                            ? " row bg-[#778da9] text-white "
+                            : " justify-end bg-[#e0e1dd] text-black "
                         } text-black  rounded-md p-2 `}
                       >
                         {/* {message.username} : {message.content} */}
                         {message.content}
-                        <span className={`text-xs text-black ml-5 `} >
+                        <span className={`${
+                          sessionStorage.getItem("username") ==
+                            message.username || message.role == "admin" ? "text-white" : "text-black"} text-xs ml-5 `}>
                           {message.time}
                         </span>
                       </span>

@@ -52,12 +52,12 @@ function SingleChat() {
   return (
     <>
       <div
-        style={{
-          backgroundImage:
-            "url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png')", // Adjust the path as needed
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
+        // style={{
+        //   backgroundImage:
+        //     "url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png')", // Adjust the path as needed
+        //   backgroundSize: "cover",
+        //   backgroundPosition: "center",
+        // }}
         className="flex flex-col justify-center items-center h-screen bg-gray-200 p-4"
       >
         <h1 className="font-bold text-xl p-2 text-center">Client Chat</h1>
