@@ -366,8 +366,8 @@ const Chatbox = ({ user, setUser, socket }) => {
         )}
       </div>
       {transfer && (
-        <div className=" flex flex-row bottom-20 w-full h-50 justify-end">
-          <div className="flex flex-col border-2 h-1/4 border-gray-100 w-56 bg-white">
+        <div className=" flex flex-row bottom-20 w-full justify-end">
+          <div className="fixed bottom-20 flex flex-col border-2 w-56 bg-white">
             <p className="flex justify-end items-start  ">
               <button
                 className=" text-white w-7 h-7 overflow-hidden  rounded-sm bg-red-600"
