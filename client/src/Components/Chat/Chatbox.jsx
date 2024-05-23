@@ -125,7 +125,7 @@ const Chatbox = ({ user, setUser, socket }) => {
 
     const recognition = new window.webkitSpeechRecognition();
     recognition.continuous = false;
-    recognition.interimResults = false;
+    recognition.interimResults = true;
     recognition.lang = 'en-US';
     let SpeechGrammarList = window.SpeechGrammarList || window.webkitSpeechGrammarList
     let recognitionList = new SpeechGrammarList()
@@ -254,23 +254,25 @@ const Chatbox = ({ user, setUser, socket }) => {
               if (fileType.startsWith("image/")) {
                 return (
                   <div key={index} className=" flex  justify-end ">
-                  <div  className = {`flex flex-col   my-2  rounded-lg  p-2  ${
-                    message.role == "admin"
-                      ? "justify-end"
-                      : "justify-start"
-                  }`} >
+                    <div
+                      className={`flex flex-col   my-2  rounded-lg  p-2  ${
+                        message.role == "admin"
+                          ? "justify-end"
+                          : "justify-start"
+                      }`}
+                    >
                       <img
                         src={`${fileContent}`}
                         alt={fileName}
-                        className="w-[200px] h-[200px] h-auto bg-gray-100 rounded-lg p-2 "
+                        className="w-[200px] h-auto bg-gray-100 rounded-lg p-2 "
                       />
                       <a
                         href={`data:${fileType};base64,${message.file}`}
-                        download={fileName} 
+                        download={fileName}
                       >
-                      {fileName}
+                        {fileName}
                       </a>
-                  </div>
+                    </div>
                   </div>
                 );
               } else if (fileType === "application/pdf") {
@@ -278,47 +280,56 @@ const Chatbox = ({ user, setUser, socket }) => {
                 const url = window.URL.createObjectURL(blob);
                 return (
                   <div key={index} className=" flex  justify-end ">
-                <div key={index} className = {`flex  flex-col  my-2  rounded-lg  p-2  ${
-                  message.role == "admin"
-                    ? "justify-end"
-                    : "justify-start"
-                }`}>
-                  <a   href={url} download={fileName} >
-                    <div  className="w-[100px] rounded-lg p-2 h-[100px] my-2 bg-gray-100 flex flex-col justify-center">
-                      <img
-                        alt={fileName}
-                        className="h-auto w-[50px] h-[50px]"
-                        src="/pdf.png"
-                      />
-                      <p>{fileName}</p>
+                    <div
+                      key={index}
+                      className={`flex  flex-col  my-2  rounded-lg  p-2  ${
+                        message.role == "admin"
+                          ? "justify-end"
+                          : "justify-start"
+                      }`}
+                    >
+                      <a href={url} download={fileName}>
+                        <div className="w-[100px] rounded-lg p-2 h-[100px] my-2 bg-gray-100 flex flex-col justify-center">
+                          <img
+                            alt={fileName}
+                            className="h-auto w-[50px]"
+                            src="/pdf.png"
+                          />
+                          <p>{fileName}</p>
+                        </div>
+                      </a>
+                    </div>
                   </div>
-                </a>
-                </div>
-                </div>)
-
+                );
               } else if (fileType.startsWith("text/")) {
                 const blob = new Blob([message.file], { type: fileType });
                 const url = window.URL.createObjectURL(blob);
                 return (
                   <div key={index} className=" flex  justify-end ">
-                <div key={index} className = {`flex  flex-col my-2  rounded-lg  p-2  ${
-                  message.role == "admin"
-                    ? "justify-end"
-                    : "justify-start"
-                }`}>
-                <a   href={url} download={fileName} >
-                  <div  className={`w-[100px]  rounded-lg p-2 h-[100px] my-2 bg-gray-100
-                  `}>
-                    <img
-                      alt={fileName}
-                      className=" h-auto w-[50px] h-[50px]"
-                      src="/txt-file.png"
-                    />
-                    <p className="w-full">{fileName}</p>
-                </div>
-              </a>
-              </div>
-              </div>)
+                    <div
+                      key={index}
+                      className={`flex  flex-col my-2  rounded-lg  p-2  ${
+                        message.role == "admin"
+                          ? "justify-end"
+                          : "justify-start"
+                      }`}
+                    >
+                      <a href={url} download={fileName}>
+                        <div
+                          className={`w-[100px]  rounded-lg p-2 h-[100px] my-2 bg-gray-100
+                  `}
+                        >
+                          <img
+                            alt={fileName}
+                            className=" h-auto w-[50px] "
+                            src="/txt-file.png"
+                          />
+                          <p className="w-full">{fileName}</p>
+                        </div>
+                      </a>
+                    </div>
+                  </div>
+                );
               } else {
                 return <p key={index}>Unsupported file type: {fileName}</p>;
               }
@@ -360,8 +371,8 @@ const Chatbox = ({ user, setUser, socket }) => {
         )}
       </div>
       {transfer && (
-        <div className="flex flex-row w-full h-50 justify-end">
-          <div className="flex flex-col mb-2 border-2 border-gray-100 w-56 bg-white">
+        <div className=" flex flex-row bottom-20 w-full h-50 justify-end">
+          <div className="flex flex-col border-2 h-1/4 border-gray-100 w-56 bg-white">
             <p className="flex justify-end items-start  ">
               <button
                 className=" text-white w-7 h-7 overflow-hidden  rounded-sm bg-red-600"
@@ -395,42 +406,42 @@ const Chatbox = ({ user, setUser, socket }) => {
         </div>
       )}
 
-      {/* {emoji && (
-        <div className="flex flex-row w-full h-50 justify-start">
-          <div className="fixed flex flex-col mb-2 border-2 border-gray-100 w-80 bg-white rounded-lg overflow-hidden">
-          <EmojiPicker onEmojiClick={handleEmojiClick} width={320} height={400} open={emoji} /> 
-          </div>
-        </div>
-      )} */}
-
       <div className="flex flex-row h-10 mt-2">
         <button
-          className="flex justify-center items-center "
+          className="flex justify-center items-center mr-1"
           onClick={() => setEmoji(!emoji)}
         >
           <img
-            className=" flex items-end justify-center mx-2 h-[30px] w-[30px]"
+            className=" flex items-end justify-center h-[25px] w-[30px]"
             src="/happy.png"
           />
         </button>
         <button
-          className="flex justify-center items-center "
+          className="flex justify-center items-center mx-1"
           onClick={handleMediaPanel}
         >
           <img
-            className=" flex items-end justify-center mx-2 h-[30px] w-[30px]"
+            className=" flex items-end justify-center h-[25px] w-[30px]"
             src="/paper-pin.png"
           />
         </button>
-          <button type="button" onClick={() => setIsRecording(!isRecording)} className="text-black p-2">
-            {isRecording ? <img
-            className=" flex items-end justify-center mx-2 h-[30px] w-[30px]"
-            src="/microphone.png"
-          /> : <img
-          className=" flex items-end justify-center mx-2 h-[30px] w-[30px]"
-          src="/mute.png"
-        /> }
-          </button>
+        <button
+          type="button"
+          onClick={() => setIsRecording(!isRecording)}
+          className="text-black mx-1"
+        >
+          {isRecording ? (
+            <img
+              className=" flex items-end justify-center h-[25px] w-[30px]"
+              src="/microphone.png"
+            />
+          ) : (
+            <img
+              className=" flex items-end justify-center h-[25px] w-[30px]"
+              src="/mute.png"
+            />
+          )}
+        </button>
         <form
           action=""
           className="flex flex-row h-10 w-full"
@@ -445,23 +456,21 @@ const Chatbox = ({ user, setUser, socket }) => {
             value={messageInput}
           />
 
-          
-
           <button
-            className="text-white mx-4 rounded-lg ml-2 "
+            className="text-white rounded-lg ml-1"
             onClick={onSubmit}
           >
             <img src="send.png" className="h-[30px] w-[30px] " />
           </button>
         </form>
         <button
-          className=" text-white mx-4 rounded-lg ml-2"
+          className=" text-white mx-3 rounded-lg"
           onClick={handleClose}
         >
           <img src="/logout.png" className="h-[30px] w-[30px] " />
         </button>
         <button
-          className=" text-white mx-4  rounded-lg ml-2"
+          className=" text-white rounded-lg mr-1"
           onClick={openAdminPanel}
         >
           <img src="transfer.png" className="h-[30px] w-[30px] " />
