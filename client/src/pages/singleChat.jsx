@@ -167,24 +167,22 @@ function SingleChat() {
                   </div>
                 );
               } else {
-                const { fileType, fileName } = message;
+                const { fileType, fileName, role } = message;
                 const fileContent = `data:${fileType};base64,${message.file}`;
 
                 if (fileType.startsWith("image/")) {
                   return (
-                    <div key={index} className=" flex ">
-                      <div
-                        className={`flex  w-full my-2  rounded-lg  p-2  ${
-                          message.role == "client"
-                            ? "justify-end"
-                            : "justify-start"
-                        }`}
-                      >
-                        <div className="flex flex-col">
+                    <div
+                      key={index}
+                      className={`flex flex-row p-2 m-2 text-sm ${
+                        role == "client" ? "justify-end" : "justify-start"
+                      }`}
+                    >
+                      <div className="flex-col">
                         <img
                           src={`${fileContent}`}
                           alt={fileName}
-                          className=" w-[200px] h-[200px] h-auto   bg-gray-100 rounded-lg p-2 "
+                          className=" w-20 h-20"
                         />
                         <a
                           href={`data:${fileType};base64,${message.file}`}
@@ -192,7 +190,6 @@ function SingleChat() {
                         >
                           {fileName}
                         </a>
-                        </div>
                       </div>
                     </div>
                   );
@@ -200,56 +197,60 @@ function SingleChat() {
                   const blob = new Blob([message.file], { type: fileType });
                   const url = window.URL.createObjectURL(blob);
                   return (
-                    <div key={index} className=" flex   ">
-                      <div
-                        key={index}
-                        className={`flex    my-2 w-full rounded-lg  p-2  ${
-                          message.role == "client"
-                            ? "justify-end"
-                            : "justify-start"
-                        }`}
-                      >
-                        <a href={url} download={fileName}>
-                          <div className="w-[100px] rounded-lg p-2 h-[100px] my-2 bg-gray-100 flex flex-col justify-center">
-                            <img
-                              alt={fileName}
-                              className="h-auto w-[50px] h-[50px]"
-                              src="/pdf.png"
-                            />
-                            {message.role}
-                            <p>{fileName}</p>
-                          </div>
-                        </a>
-                      </div>
+                    <div  
+                      key={index}
+                      className={`p-2 m-4 flex text-sm flex-row ${
+                        message.role == "client"
+                          ? "justify-end"
+                          : "justify-start"
+                      }`}
+                    >
+                      <div className="flex flex-col w-20">
+
+                      <a href={url} download={fileName}>
+                        <img
+                          alt={fileName}
+                          className="w-10 h-10"
+                          src="/pdf.png"
+                          />
+                        <p>
+                          {fileName.length > 12
+                            ? fileName.substr(0, 12)
+                            : fileName}
+                          ...
+                        </p>
+                      </a>
+                  </div>
                     </div>
                   );
                 } else if (fileType.startsWith("text/")) {
                   const blob = new Blob([message.file], { type: fileType });
                   const url = window.URL.createObjectURL(blob);
                   return (
-                    <div key={index} className=" flex ">
-                      <div
-                        key={index}
-                        className={`flex  flex-col my-2  rounded-lg  p-2  ${
-                          message.role == "client"
-                            ? "justify-end"
-                            : "justify-start"
-                        }`}
-                      >
-                        <a href={url} download={fileName}>
-                          <div
-                            className={`w-[100px]  rounded-lg p-2 h-[100px] my-2 bg-gray-100
-                  `}
-                          >
-                            <img
-                              alt={fileName}
-                              className=" h-auto w-[50px] h-[50px]"
-                              src="/txt-file.png"
-                            />
-                            <p className="w-full">{fileName}</p>
-                          </div>
-                        </a>
-                      </div>
+                    <div
+                      key={index}
+                      className={`p-2 mx-4 flex text-sm my-2 flex-row ${
+                        message.role == "client"
+                          ? "justify-end"
+                          : "justify-start"
+                      }`}
+                    >
+                      <div className="flex flex-col w-20">
+
+                      <a href={url} download={fileName}>
+                        <img
+                          alt={fileName}
+                          className="w-10 h-10"
+                          src="/txt-file.png"
+                          />
+                        <p>
+                          {fileName.length > 12
+                            ? fileName.substr(0, 12)
+                            : fileName}
+                          ...
+                        </p>
+                      </a>
+                            </div>
                     </div>
                   );
                 } else {
@@ -258,8 +259,8 @@ function SingleChat() {
               }
             })}
             {media && (
-              <div className="fixed flex flex-row w-full  bottom-20">
-                <div className="flex flex-col mb-2 border-2 p-2 border-gray-100 rounded-lg overflow-hidden">
+              <div className="fixed flex flex-row bottom-20 bg-white">
+                <div className="flex flex-col my-2 border-2 p-2 border-gray-100 rounded-lg overflow-hidden">
                   <input type="file" onChange={handleFileUpload} />
                   <div className="flex flex-row space-x-5 justify-end">
                     <button
