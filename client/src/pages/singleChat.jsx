@@ -96,17 +96,15 @@ function SingleChat() {
                     <div className="my-2 mx-4">
                       <div
                         className={`flex ${
-                          sessionStorage.getItem("username") == message.username
-                            ? "justify-end"
+                          message.role == "client"  ? "justify-end"
                             : "justify-start"
                         }`}
                       >
                         <span
                           className={`${
-                            sessionStorage.getItem("username") ==
-                            message.username
+                            message.role == "client"
                               ? " row bg-[rgb(226,255,195)] "
-                              : " justify-end bg-gray-50 "
+                              : "bg-gray-50 "
                           } text-black  rounded-md p-2 `}
                         >
                           {/* {message.username} : {message.content} */}
